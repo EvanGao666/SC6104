@@ -1,0 +1,17 @@
+/* App.css */
+body,
+html {
+    height: 100%;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 使容器高度等于视口高度 */
+}
+
+.content {
+    text-align: center; /* 使内容居中 */
+}
