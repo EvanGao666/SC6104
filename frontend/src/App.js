@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Web3 from "web3";
 import SimpleStorage from "./contracts/SimpleStorage.json";
-import "./App.css"; // 导入 CSS 文件
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./components/Home";
+import ValueManager from "./components/ValueManager";
+import Transfer from "./components/Transfer";
+import { Container, CssBaseline, Alert } from "@mui/material";
 
 export const CONTRACT_ADDRESS = SimpleStorage.address;
 export const SimpleStorageABI = SimpleStorage.abi;
@@ -9,59 +14,73 @@ export const SimpleStorageABI = SimpleStorage.abi;
 const App = () => {
     const [web3, setWeb3] = useState(null);
     const [contract, setContract] = useState(null);
+    const [account, setAccount] = useState(null);
+    const [balance, setBalance] = useState(null); // 添加余额状态
+    const [error, setError] = useState("");
 
     useEffect(() => {
         const init = async () => {
             if (window.ethereum) {
-                const web3Instance = new Web3(
-                    Web3.givenProvider || "http://localhost:8545"
-                );
-                const contractInstance = new web3Instance.eth.Contract(
-                    SimpleStorageABI,
-                    CONTRACT_ADDRESS
-                );
-                setWeb3(web3Instance);
-                setContract(contractInstance);
+                try {
+                    await window.ethereum.request({
+                        method: "eth_requestAccounts",
+                    });
+                    const web3Instance = new Web3(window.ethereum);
+                    setWeb3(web3Instance);
+                    const contractInstance = new web3Instance.eth.Contract(
+                        SimpleStorageABI,
+                        CONTRACT_ADDRESS
+                    );
+                    setContract(contractInstance);
+                    const accounts = await web3Instance.eth.getAccounts();
+                    setAccount(accounts[0]);
+
+                    // 获取余额
+                    const balance = await web3Instance.eth.getBalance(
+                        accounts[0]
+                    );
+                    setBalance(web3Instance.utils.fromWei(balance, "ether"));
+                } catch (err) {
+                    setError("Failed to initialize web3.");
+                }
             } else {
-                console.error("Please install MetaMask!");
+                setError("Please install MetaMask!");
             }
         };
         init();
     }, []);
 
-    async function getValue() {
-        if (contract) {
-            const storedValue = await contract.methods.getValue().call();
-            console.log("stored value " + storedValue);
-            document.getElementById("storedValue").innerText =
-                "Stored Value: " + storedValue;
-        }
-    }
-
-    async function setValue() {
-        if (web3 && contract) {
-            const accounts = await web3.eth.getAccounts(); // 使用 web3.eth.getAccounts()
-            const value = document.getElementById("moneyInput").value;
-            console.log("value: " + value);
-            console.log("accounts[0] " + accounts[0]);
-            await contract.methods.setValue(value).send({ from: accounts[0] });
-        }
-    }
-
     return (
-        <div className="container">
-            <div className="content">
-                <h2>Ethereum DApp</h2>
-                <input
-                    type="number"
-                    id="moneyInput"
-                    placeholder="Enter amount to store"
-                />
-                <button onClick={setValue}>Store Value</button>
-                <button onClick={getValue}>Get Stored Value</button>
-                <p id="storedValue"></p>
-            </div>
-        </div>
+        <Router>
+            <CssBaseline />
+            <Navbar account={account} balance={balance} />
+            <Container sx={{ mt: 2 }}>
+                {error && <Alert severity="error">{error}</Alert>}
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route
+                        path="/value"
+                        element={
+                            <ValueManager
+                                contract={contract}
+                                account={account}
+                                setError={setError}
+                            />
+                        }
+                    />
+                    <Route
+                        path="/transfer"
+                        element={
+                            <Transfer
+                                web3={web3}
+                                account={account}
+                                setError={setError}
+                            />
+                        }
+                    />
+                </Routes>
+            </Container>
+        </Router>
     );
 };
 
