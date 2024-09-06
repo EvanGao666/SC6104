@@ -27,14 +27,15 @@ const App = () => {
                     });
                     const web3Instance = new Web3(window.ethereum);
                     setWeb3(web3Instance);
+                    //
                     const contractInstance = new web3Instance.eth.Contract(
                         SimpleStorageABI,
                         CONTRACT_ADDRESS
                     );
                     setContract(contractInstance);
+                    //
                     const accounts = await web3Instance.eth.getAccounts();
                     setAccount(accounts[0]);
-
                     // 获取余额
                     const balance = await web3Instance.eth.getBalance(
                         accounts[0]
