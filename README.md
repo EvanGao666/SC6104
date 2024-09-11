@@ -1,13 +1,17 @@
 ```shell
-//dapp-demo directory
+#deploy.sh
+#!/bin/bash
 yarn install
-yarn hardhat compile
-yarn hardhat node
-yarn hardhat run ignition/modules/deploy.js --network localhost
+##
+yarn hardhat run ignition/modules/deploy.js --network sepolia
+# 构建并启动前端
+cd frontend && yarn install && yarn build && yarn start
 ```
 
+git 命令
+
 ```shell
-// dapp-demo/frontend directory
-yarn install
-yarn start
+git add .
+git commit -m "change"
+git push -u origin master
 ```
