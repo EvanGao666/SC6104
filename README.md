@@ -2,9 +2,10 @@ deploy.sh
 
 ```shell
 #!/bin/bash
-yarn install && yarn hardhat run ignition/modules/deploy.js --network sepolia
-# 构建并启动前端
-cd frontend && yarn cache clean && yarn install && yarn build && yarn start
+# install dependencies and build frontend and backend
+yarn install && cd frontend && yarn install && yarn build
+# deploy
+yarn hardhat run ignition/modules/deploy.js --network sepolia && cd frontend && yarn start
 ```
 
 git 命令
