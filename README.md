@@ -13,5 +13,5 @@ git 命令
 ```shell
 git add .
 git commit -m "change"
-git push -u origin master
+git push -u origin main
 ```
