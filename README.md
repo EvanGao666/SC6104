@@ -1,11 +1,9 @@
 ```shell
-//dapp-demo directory
-yarn hardhat node
-yarn hardhat compile
-yarn hardhat run ignition/modules/deploy.js --network localhost
-```
-
-```shell
-// dapp-demo/frontend directory
-yarn start
+#deploy.sh
+#!/bin/bash
+yarn install
+##
+yarn hardhat run ignition/modules/deploy.js --network sepolia
+# 构建并启动前端
+cd frontend && yarn install && yarn build && yarn start
 ```
