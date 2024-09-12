@@ -1,7 +1,7 @@
 # 下载项目
 
 ```shell
-git clone https://github.com/EvanGao666/SC6104.git
+git clone https://github.com/EvanGao666/SC6113.git
 ```
 
 # 下载依赖
