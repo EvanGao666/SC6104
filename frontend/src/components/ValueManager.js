@@ -35,7 +35,8 @@ const ValueManager = ({ contract, account, setError }) => {
         setLoading(true);
         try {
             const result = await contract.methods.getValue().call();
-            setStoredValue(result);
+            console.log("Fetched value:", result); // 添加调试输出
+            setStoredValue(result.toString()); // 转换为字符串
         } catch (err) {
             setError("Failed to get value: " + err.message);
         } finally {
