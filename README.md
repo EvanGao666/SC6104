@@ -54,7 +54,7 @@ git commit -m "change"
 git push -u origin main
 ```
 
-## render
+## Render
 
 ```
 # build
