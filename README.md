@@ -18,7 +18,7 @@ yarn install && cd frontend && yarn install
 
 ```shell
 #!/bin/bash
-yarn hardhat node && yarn hardhat run ignition/modules/deploy.js --network localhost
+yarn hardhat compile && yarn hardhat node && yarn hardhat run ignition/modules/deploy.js --network localhost
 # build frontend and start server
 cd frontend && yarn start
 ```
@@ -42,7 +42,7 @@ PRIVATE_KEY=
 
 ```shell
 #!/bin/bash
-yarn build && yarn hardhat run ignition/modules/deploy.js --network sepolia
+yarn hardhat compile && yarn hardhat run ignition/modules/deploy.js --network sepolia
 # build frontend and start server
 cd frontend && yarn start
 ```
