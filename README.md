@@ -18,7 +18,7 @@ yarn install && cd frontend && yarn install
 
 ```shell
 #!/bin/bash
-yarn build && yarn hardhat node && yarn hardhat run ignition/modules/deploy.js --network localhost
+yarn hardhat node && yarn hardhat run ignition/modules/deploy.js --network localhost
 # build frontend and start server
 cd frontend && yarn start
 ```
