@@ -56,3 +56,12 @@ git add .
 git commit -m "change"
 git push -u origin main
 ```
+
+## render
+
+```
+# build
+yarn install && yarn hardhat run ignition/modules/deploy.js --network sepolia
+# start
+cd frontend && yarn install && yarn build && yarn start
+```
