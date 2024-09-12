@@ -14,15 +14,6 @@ yarn install && cd frontend && yarn install
 
 # 部署
 
-## 部署本地网
-
-```shell
-#!/bin/bash
-yarn hardhat compile && yarn hardhat node && yarn hardhat run ignition/modules/deploy.js --network localhost
-# build frontend and start server
-cd frontend && yarn start
-```
-
 ## 部署测试网
 
 设置本地环境变量
@@ -38,11 +29,17 @@ SEPOLIA_API_URL=
 PRIVATE_KEY=
 ```
 
+编译
+
+```shell
+yarn hardhat compile
+```
+
 运行
 
 ```shell
 #!/bin/bash
-yarn hardhat compile && yarn hardhat run ignition/modules/deploy.js --network sepolia
+yarn hardhat run ignition/modules/deploy.js --network sepolia
 # build frontend and start server
 cd frontend && yarn start
 ```

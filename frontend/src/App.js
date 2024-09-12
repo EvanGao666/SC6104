@@ -188,7 +188,7 @@ const App = () => {
                         }}
                     >
                         <Typography variant="h6" fontWeight="bold">
-                            © 2024 Group 4 's DApp
+                            © 2024 Group 4's DApp
                         </Typography>
                         <Typography variant="body2" fontStyle="italic">
                             Empowering decentralized applications
