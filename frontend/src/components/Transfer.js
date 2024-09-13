@@ -13,6 +13,7 @@ import {
     CircularProgress,
     Snackbar,
     Alert,
+    useTheme,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 
@@ -22,30 +23,73 @@ const Transfer = ({ web3, account, setError }) => {
     const [amount, setAmount] = useState("");
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [error, setErrorState] = useState(""); // New state for error message
+    const [refreshing, setRefreshing] = useState(false); // New state for refreshing
+
+    const theme = useTheme();
+    const isDarkMode = theme.palette.mode === "dark";
+
+    const buttonStyle = {
+        backgroundColor: isDarkMode ? "#ffffff" : "#000000",
+        color: isDarkMode ? "#000000" : "#ffffff",
+        "&:hover": {
+            backgroundColor: isDarkMode ? "#e0e0e0" : "#333333",
+        },
+    };
 
     const handleTransfer = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        try {
-            const valueInWei = web3.utils.toWei(amount, "ether");
+        e.preventDefault(); // Prevent the default form submission behavior
 
-            await web3.eth.sendTransaction({
+        if (!web3 || !account) {
+            setErrorState("Web3 or account not available.");
+            return;
+        }
+
+        if (!recipient || !amount) {
+            setErrorState("Recipient address and amount are required.");
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            // Validate recipient address
+            if (!web3.utils.isAddress(recipient)) {
+                setErrorState("Invalid recipient address.");
+                return;
+            }
+
+            const amountInWei = web3.utils.toWei(amount, "ether");
+            const transaction = await web3.eth.sendTransaction({
                 from: account,
                 to: recipient,
-                value: valueInWei,
+                value: amountInWei,
             });
 
+            // Update the transfers state with the new transfer
             const newTransfer = {
                 recipient,
                 amount,
-                timestamp: new Date().toLocaleString(),
+                timestamp: new Date().toLocaleString(), // Current timestamp
             };
             setTransfers((prevTransfers) => [newTransfer, ...prevTransfers]);
+
             setSuccess(true);
-            setRecipient("");
-            setAmount("");
         } catch (err) {
-            setError("Failed to transfer.");
+            let errorMessage = "Transaction failed.";
+            if (err.message.includes("Invalid address")) {
+                errorMessage = "Invalid recipient address.";
+            } else if (err.message.includes("LocalWalletNotAvailableError")) {
+                errorMessage =
+                    "No wallet available. Please connect your wallet.";
+            } else {
+                errorMessage = `Transaction failed: ${err.message}`;
+            }
+            setErrorState(errorMessage);
+            setRefreshing(true);
+            setTimeout(() => {
+                window.location.reload(); // Refresh the page after 3 seconds
+            }, 3000);
         } finally {
             setLoading(false);
         }
@@ -86,7 +130,6 @@ const Transfer = ({ web3, account, setError }) => {
                         <Grid item xs={12}>
                             <Button
                                 variant="contained"
-                                color="primary"
                                 type="submit"
                                 fullWidth
                                 disabled={loading}
@@ -98,9 +141,7 @@ const Transfer = ({ web3, account, setError }) => {
                                     )
                                 }
                                 sx={{
-                                    "&:hover": {
-                                        backgroundColor: "#1976d2",
-                                    },
+                                    ...buttonStyle,
                                     transition: "background-color 0.3s ease",
                                 }}
                             >
@@ -151,6 +192,8 @@ const Transfer = ({ web3, account, setError }) => {
                 open={success}
                 autoHideDuration={6000}
                 onClose={() => setSuccess(false)}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                sx={{ top: 0 }}
             >
                 <Alert
                     onClose={() => setSuccess(false)}
@@ -158,6 +201,23 @@ const Transfer = ({ web3, account, setError }) => {
                     sx={{ width: "100%" }}
                 >
                     Transfer successful!
+                </Alert>
+            </Snackbar>
+
+            <Snackbar
+                open={!!error}
+                autoHideDuration={3000}
+                onClose={() => setErrorState("")}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                sx={{ top: 0 }}
+            >
+                <Alert
+                    onClose={() => setErrorState("")}
+                    severity="error"
+                    sx={{ width: "100%" }}
+                >
+                    {error}
+                    {refreshing && <div>Refreshing page in 3 seconds...</div>}
                 </Alert>
             </Snackbar>
         </Box>
