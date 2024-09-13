@@ -1,65 +1,80 @@
-# 下载项目
+# SC6113: Smart Contract DApp
 
-```shell
+This project demonstrates deploying and interacting with Solidity smart contracts using Hardhat and a React frontend. The smart contract is deployed on the Sepolia testnet, and the frontend interacts with it through MetaMask.
+
+## Project Setup
+
+### Clone the repository
+
+```bash
 git clone https://github.com/EvanGao666/SC6113.git
 ```
 
-# 下载依赖
+### Install dependencies
 
-```shell
+```bash
 #!/bin/bash
-# install dependencies
+# Install dependencies for both backend and frontend
 yarn install && cd frontend && yarn install
 ```
 
-# 部署
+## Deploying the Smart Contract
 
-## 部署测试网
+### Deploy to Sepolia Testnet
 
-设置本地环境变量
+1. **Set up environment variables:**
 
-```shell
-touch .env
-```
+    Create a `.env` file in the root directory:
 
-填入自己的 SEPOLIA_API_URL 和 PRIVATE_KEY，格式如下
+    ```bash
+    touch .env
+    ```
 
-```
-SEPOLIA_API_URL=
-PRIVATE_KEY=
-```
+    Add your Sepolia API URL and private key to the `.env` file in the following format:
 
-编译
+    ```bash
+    SEPOLIA_API_URL=your_sepolia_api_url
+    PRIVATE_KEY=your_private_key
+    ```
 
-```shell
-yarn hardhat compile
-```
+2. **Compile the smart contracts:**
 
-运行
+    ```bash
+    yarn hardhat compile
+    ```
 
-```shell
-#!/bin/bash
-yarn hardhat run ignition/modules/deploy.js --network sepolia
-# build frontend and start server
-cd frontend && yarn start
-```
+3. **Run deployment:**
 
-# 其他
+    ```bash
+    # Deploy to the Sepolia testnet
+    yarn hardhat run ignition/modules/deploy.js --network sepolia
 
-## git 命令
+    # Build the frontend and start the development server
+    cd frontend && yarn start
+    ```
 
-```shell
+## Additional Commands
+
+### Git Commands
+
+Use the following commands to track and push changes:
+
+```bash
 git add .
-git commit -m "change"
+git commit -m "your commit message"
 git push -u origin main
 ```
 
-## Render
+### Render Deployment
 
-```shell
+For deployment on Render, use the following build and start commands:
+
+```bash
 # Build Command
 yarn install && cd frontend && yarn install && yarn build
+
 # Start Command
 cd frontend && npx serve -s build -l $PORT
-
 ```
+
+PORT is 10000, don't forget to set up!
