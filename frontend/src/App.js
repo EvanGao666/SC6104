@@ -192,6 +192,11 @@ const App = () => {
                         key={item.text}
                         component={Link}
                         to={item.path}
+                        onClick={() => {
+                            if (isMobile) {
+                                toggleMenu(); // Close the sidebar on mobile
+                            }
+                        }}
                     >
                         <ListItemIcon
                             sx={{ color: theme.palette.text.primary }}
