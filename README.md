@@ -77,4 +77,4 @@ yarn install && cd frontend && yarn install && yarn build
 cd frontend && npx serve -s build -l $PORT
 ```
 
-PORT is 10000, don't forget to set up!
+`PORT` is 10000, don't forget to set up!
