@@ -97,6 +97,13 @@ const App = () => {
             );
             setContract(contractInstance);
             const accounts = await web3Instance.eth.getAccounts();
+
+            if (accounts.length === 0) {
+                setError(""); // Clear any existing error messages
+                setLoading(false);
+                return;
+            }
+
             setAccount(accounts[0]);
             await updateBalance(web3Instance, accounts[0]);
             setLoading(false);
@@ -128,7 +135,7 @@ const App = () => {
 
     useEffect(() => {
         if (window.ethereum) {
-            initWeb3();
+            connectWallet();
         } else {
             setError("Please install MetaMask!");
             setLoading(false);
