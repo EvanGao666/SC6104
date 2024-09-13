@@ -53,3 +53,13 @@ git add .
 git commit -m "change"
 git push -u origin main
 ```
+
+## Render
+
+```shell
+# Build Command
+yarn install && cd frontend && yarn install && yarn build
+# Start Command
+cd frontend && npx serve -s build -l $PORT
+
+```
